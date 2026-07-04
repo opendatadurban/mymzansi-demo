@@ -15,7 +15,7 @@ import { Screen, Card, Button, Row, Divider } from '../../src/ui/components';
 import { colors, font, radius, spacing } from '../../src/ui/theme';
 import { issuerName } from '../../src/credential/trust';
 import { verifyRaw, type ScanOutcome } from '../../src/credential/scan';
-import { claimLabelKey } from '../../src/credential/schema';
+import { claimLabel } from '../../src/credential/display';
 
 type Parsed = ScanOutcome;
 
@@ -133,7 +133,7 @@ function Result({ parsed, onAgain }: { parsed: Parsed; onAgain: () => void }) {
             claimEntries.map(([name, value]) => (
               <Row
                 key={name}
-                label={schemaId ? t(claimLabelKey(schemaId, name)) : name}
+                label={claimLabel(schemaId ?? '', name, t)}
                 value={String(value)}
               />
             ))

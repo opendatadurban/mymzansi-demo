@@ -12,8 +12,38 @@ const en = {
   },
   tabs: {
     wallet: 'Wallet',
+    apply: 'Apply',
     verify: 'Verify',
     settings: 'Settings',
+  },
+  apply: {
+    title: 'Apply for a service',
+    subtitle: 'Apply for a government credential. Once issued, it lands in your wallet.',
+    fee: 'Fee',
+  },
+  form: {
+    step: 'Step {{current}} of {{total}}',
+    next: 'Next',
+    errors: {
+      required: 'This field is required.',
+      requiredCheck: 'Please tick this box to continue.',
+      email: 'Enter a valid email address.',
+      tel: 'Enter a valid phone number.',
+      date: 'Use the format YYYY-MM-DD.',
+      idNumber: 'Enter a valid 13-digit South African ID number.',
+    },
+  },
+  payment: {
+    title: 'Payment',
+    securedNote: 'Payment is handled by the payment gateway; no card data is stored.',
+    demoNote: 'Demo: no real payment is taken. Paying issues the credential to your wallet.',
+    pay: 'Pay {{fee}}',
+    processing: 'Processing…',
+  },
+  success: {
+    title: 'Credential issued',
+    body: 'Your {{name}} has been added to your wallet.',
+    viewWallet: 'View my wallet',
   },
   lock: {
     title: 'MyMzansi',

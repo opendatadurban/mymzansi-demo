@@ -23,6 +23,13 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="apply"
+        options={{
+          title: t('tabs.apply'),
+          tabBarIcon: ({ color, size }) => <Ionicons name="document-text-outline" color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
         name="verify"
         options={{
           title: t('tabs.verify'),

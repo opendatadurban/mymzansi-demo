@@ -17,8 +17,38 @@ const af: Translations = {
   },
   tabs: {
     wallet: 'Beursie',
+    apply: 'Aansoek',
     verify: 'Verifieer',
     settings: 'Instellings',
+  },
+  apply: {
+    title: 'Doen aansoek om ’n diens',
+    subtitle: 'Doen aansoek om ’n regeringsgeloofsbrief. Sodra dit uitgereik is, verskyn dit in jou beursie.',
+    fee: 'Fooi',
+  },
+  form: {
+    step: 'Stap {{current}} van {{total}}',
+    next: 'Volgende',
+    errors: {
+      required: 'Hierdie veld is verplig.',
+      requiredCheck: 'Merk asseblief hierdie blokkie om voort te gaan.',
+      email: 'Voer ’n geldige e-posadres in.',
+      tel: 'Voer ’n geldige telefoonnommer in.',
+      date: 'Gebruik die formaat JJJJ-MM-DD.',
+      idNumber: 'Voer ’n geldige 13-syfer Suid-Afrikaanse ID-nommer in.',
+    },
+  },
+  payment: {
+    title: 'Betaling',
+    securedNote: 'Betaling word deur die betaalpoort hanteer; geen kaartdata word gestoor nie.',
+    demoNote: 'Demo: geen werklike betaling word geneem nie. Betaling reik die geloofsbrief aan jou beursie uit.',
+    pay: 'Betaal {{fee}}',
+    processing: 'Verwerk tans…',
+  },
+  success: {
+    title: 'Geloofsbrief uitgereik',
+    body: 'Jou {{name}} is by jou beursie gevoeg.',
+    viewWallet: 'Bekyk my beursie',
   },
   lock: {
     title: 'MyMzansi',

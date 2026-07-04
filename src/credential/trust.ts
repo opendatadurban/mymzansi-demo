@@ -1,6 +1,12 @@
 /**
  * The relying-party (verifier) side of the app, wired to the committed trust
  * anchor and the bundled revocation status list. Everything here runs offline.
+ *
+ * Committed issuers are the real government anchors (public keys only). At
+ * runtime the app also registers the demo *issuing service* (see
+ * issuerSimulator.ts) so credentials it issues from a completed form verify on
+ * this device. In production that issuer is a separate service and its public
+ * key would be a committed anchor like any other.
  */
 import trust from './trust.json';
 import statusListJson from '../../assets/credentials/statuslist.json';
@@ -12,23 +18,37 @@ export interface IssuerInfo {
   name: string;
 }
 
-const issuers = trust.issuers as Record<string, IssuerInfo>;
+const committed = trust.issuers as Record<string, IssuerInfo>;
+
+/** Issuers registered at runtime (e.g. the on-device demo issuing service). */
+const runtimeIssuers: Record<string, IssuerInfo> = {};
+
+export function registerRuntimeIssuer(id: string, publicKeyHex: string, name: string): void {
+  runtimeIssuers[id] = { publicKeyHex, name };
+}
+
+function allIssuers(): Record<string, IssuerInfo> {
+  return { ...committed, ...runtimeIssuers };
+}
 
 export const TRUSTED_ISSUERS: Record<string, string> = Object.fromEntries(
-  Object.entries(issuers).map(([id, info]) => [id, info.publicKeyHex])
+  Object.entries(committed).map(([id, info]) => [id, info.publicKeyHex])
 );
 
 export function issuerName(id: string | undefined): string | undefined {
-  return id ? issuers[id]?.name : undefined;
+  return id ? allIssuers()[id]?.name : undefined;
 }
 
 const bundledStatusList = statusListJson as unknown as SignedStatusList;
 
-/** Verify a scanned presentation offline against the trust anchor + status list. */
+/** Verify a scanned presentation offline against the trust anchor (+ status list when one applies). */
 export function verifyScanned(presentation: Presentation, now = Math.floor(Date.now() / 1000)): VerifyResult {
-  return verifyPresentation(presentation, {
-    trustedIssuers: TRUSTED_ISSUERS,
-    now,
-    statusList: bundledStatusList,
-  });
+  const trustedIssuers = Object.fromEntries(
+    Object.entries(allIssuers()).map(([id, info]) => [id, info.publicKeyHex])
+  );
+  // Only apply the bundled status list to credentials that reference it; other
+  // issuers publish their own lists (not bundled here), so revocation isn't checked.
+  const statusList =
+    presentation?.payload?.status?.list === bundledStatusList.payload.list ? bundledStatusList : undefined;
+  return verifyPresentation(presentation, { trustedIssuers, now, statusList });
 }
