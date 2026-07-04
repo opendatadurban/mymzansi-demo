@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "MyMzansi",
+    "slug": "mymzansi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "mymzansi",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "za.gov.demo.mymzansi"
+    },
+    "android": {
+      "package": "za.gov.demo.mymzansi",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B7A4B",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "MyMzansi uses the camera to scan a citizen's QR code when verifying a credential."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "MyMzansi uses Face ID to unlock your wallet."
+        }
+      ]
+    ]
+  }
+}
