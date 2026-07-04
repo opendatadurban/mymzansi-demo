@@ -23,3 +23,9 @@ jobs:
         run: npm run lint
       - name: Unit tests
         run: npm test -- --ci
+      - name: Verify issuer + verifier agree (reproducible issuance)
+        env:
+          ISSUER_SK: '0000000000000000000000000000000000000000000000000000000000000001'
+        run: |
+          npm run issue
+          npm test -- --ci --testPathPattern 'seed|scan'
