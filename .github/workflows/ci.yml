@@ -11,21 +11,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
       - name: Install dependencies
         run: npm ci
+
       - name: Typecheck
         run: npm run typecheck
+
       - name: Lint
         run: npm run lint
+
       - name: Unit tests
         run: npm test -- --ci
-      - name: Verify issuer + verifier agree (reproducible issuance)
+
+      - name: Verify issuer + verifier agree (re-issue is reproducible)
         env:
-          ISSUER_SK: '0000000000000000000000000000000000000000000000000000000000000001'
+          ISSUER_SK: 0000000000000000000000000000000000000000000000000000000000000001
         run: |
           npm run issue
           npm test -- --ci --testPathPattern 'seed|scan'
+
+  bundle:
+    name: Metro bundle (Android)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Export Android bundle
+        run: npx expo export --platform android --output-dir dist
