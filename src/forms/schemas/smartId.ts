@@ -10,6 +10,7 @@ export const SMART_ID: ServiceForm = {
   credentialName: 'Smart ID Card',
   issuerName: 'Department of Home Affairs',
   accent: '#0B7A4B',
+  icon: 'card-outline',
   fee: 'R 600,00',
   submitLabel: 'Proceed to payment',
   fixedClaims: { issuing_authority: 'Department of Home Affairs' },

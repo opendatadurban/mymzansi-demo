@@ -10,6 +10,7 @@ export const SASSA: ServiceForm = {
   credentialName: 'SASSA Grant',
   issuerName: 'South African Social Security Agency',
   accent: '#B8541B',
+  icon: 'cash-outline',
   fee: 'R 600,00',
   submitLabel: 'Proceed to payment',
   fixedClaims: {

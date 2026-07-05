@@ -10,6 +10,7 @@ export const MATRIC: ServiceForm = {
   credentialName: 'Matric Certificate',
   issuerName: 'Department of Basic Education',
   accent: '#1F5FA6',
+  icon: 'school-outline',
   fee: 'R 600,00',
   submitLabel: 'Proceed to payment',
   fixedClaims: { issuing_authority: 'South African Department of Basic Education' },

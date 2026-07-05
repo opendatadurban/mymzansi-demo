@@ -63,6 +63,8 @@ export interface ServiceForm {
   credentialName: string;
   issuerName: string;
   accent: string;
+  /** Ionicons glyph name shown on the services list. */
+  icon: string;
   /** Displayed application fee, e.g. "R 600,00". */
   fee: string;
   submitLabel: string;

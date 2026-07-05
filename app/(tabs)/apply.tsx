@@ -10,6 +10,8 @@ import { Screen } from '../../src/ui/components';
 import { colors, font } from '../../src/ui/theme';
 import { SERVICES } from '../../src/forms/registry';
 
+type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
+
 export default function ApplyScreen() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -27,16 +29,19 @@ export default function ApplyScreen() {
             accessibilityRole="button"
             accessibilityLabel={s.title}
           >
-            <Card style={{ borderLeftWidth: 5, borderLeftColor: s.accent }}>
-              <Card.Body className="flex-row items-center gap-3">
-                <View className="flex-1 gap-1">
+            <Card>
+              <Card.Body className="flex-row items-center gap-4">
+                <View
+                  className="items-center justify-center rounded-2xl"
+                  style={{ width: 48, height: 48, backgroundColor: s.accent + '18' }}
+                >
+                  <Ionicons name={s.icon as IoniconName} size={24} color={s.accent} />
+                </View>
+                <View className="flex-1 gap-0.5">
                   <Card.Title>{s.shortTitle}</Card.Title>
                   <Card.Description>{s.subtitle}</Card.Description>
-                  <Text style={[font.label, { color: s.accent, marginTop: 4 }]}>
-                    {t('apply.fee')}: {s.fee}
-                  </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={22} color={colors.textMuted} />
+                <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
               </Card.Body>
             </Card>
           </Pressable>
