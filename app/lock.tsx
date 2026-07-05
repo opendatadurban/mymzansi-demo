@@ -67,20 +67,20 @@ export default function LockScreen() {
     [mode, firstPin, createPin, tryPin, t]
   );
 
-  const onDigit = useCallback(
-    (d: string) => {
-      setError(null);
-      setPin((prev) => {
-        if (prev.length >= PIN_LENGTH) return prev;
-        const next = prev + d;
-        if (next.length === PIN_LENGTH) void submit(next);
-        return next;
-      });
-    },
-    [submit]
-  );
+  const onDigit = useCallback((d: string) => {
+    setError(null);
+    setPin((prev) => (prev.length >= PIN_LENGTH ? prev : prev + d));
+  }, []);
 
   const onDelete = useCallback(() => setPin((p) => p.slice(0, -1)), []);
+
+  // Fire completion from an effect (not inside the setPin updater) so the reset
+  // to empty applies cleanly — otherwise the dots don't clear between steps.
+  useEffect(() => {
+    if (pin.length === PIN_LENGTH) void submit(pin);
+    // submit is stable enough for this flow; re-running only on `pin` is intended.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pin]);
 
   const heading =
     mode === 'create' ? t('lock.createTitle') : mode === 'confirm' ? t('lock.confirmTitle') : t('lock.enterTitle');
