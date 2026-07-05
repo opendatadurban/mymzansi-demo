@@ -31,7 +31,7 @@ jobs:
 
       - name: Verify issuer + verifier agree (re-issue is reproducible)
         env:
-          ISSUER_SK: 0000000000000000000000000000000000000000000000000000000000000001
+          ISSUER_SK: '0000000000000000000000000000000000000000000000000000000000000001'
         run: |
           npm run issue
           npm test -- --ci --testPathPattern 'seed|scan'
