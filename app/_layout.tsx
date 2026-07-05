@@ -25,13 +25,16 @@ import { useWalletStore } from '../src/store/walletStore';
 import { ensureIssuer } from '../src/forms/issuerSimulator';
 import { colors } from '../src/ui/theme';
 
-Uniwind.setTheme('mzansi-light');
-
 export default function RootLayout() {
   const [ready, setReady] = useState(false);
   const initAuth = useAuthStore((s) => s.init);
   const loadWallet = useWalletStore((s) => s.load);
-  const [fontsLoaded] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold });
+  // Fonts load in the background — don't block first render on them.
+  useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold });
+
+  useEffect(() => {
+    Uniwind.setTheme('mzansi-light');
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -40,7 +43,7 @@ export default function RootLayout() {
     })();
   }, [initAuth, loadWallet]);
 
-  if (!ready || !fontsLoaded) {
+  if (!ready) {
     return (
       <View style={styles.splash}>
         <ActivityIndicator color={colors.primary} size="large" />
