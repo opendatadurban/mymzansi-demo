@@ -2,6 +2,7 @@
   "expo": {
     "name": "MyMzansi",
     "slug": "mymzansi",
+    "owner": "tsh-sank",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,7 +21,12 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,7 +38,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "MyMzansi uses the camera to scan a citizen's QR code when verifying a credential."
+          "cameraPermission": "MyMzansi uses the camera to scan a citizen's QR code when verifying a credential.",
+          "recordAudioAndroid": false
         }
       ],
       [
@@ -41,6 +48,12 @@
           "faceIDPermission": "MyMzansi uses Face ID to unlock your wallet."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "51165660-ecdf-404b-8cf4-77ba3ca610dd"
+      }
+    }
   }
 }
