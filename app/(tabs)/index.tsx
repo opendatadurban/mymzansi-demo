@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Screen, Button, Pill } from '../../src/ui/components';
 import { colors, font, radius, spacing } from '../../src/ui/theme';
 import { useWalletStore } from '../../src/store/walletStore';
-import { getClaim, statusOf, formatDate } from '../../src/credential/display';
+import { holderName, statusOf, formatDate } from '../../src/credential/display';
 import type { HeldCredential } from '../../src/crypto/types';
 
 export default function WalletScreen() {
@@ -69,7 +69,7 @@ function CredentialCard({ cred, locale, onPress }: { cred: HeldCredential; local
   const { t } = useTranslation();
   const status = statusOf(cred);
   const accent = cred.meta?.accent ?? colors.primary;
-  const holder = String(getClaim(cred, 'fullName') ?? '');
+  const holder = holderName(cred);
   const title = cred.meta?.title ?? t('credential.poa.title');
 
   return (

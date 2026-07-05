@@ -11,6 +11,7 @@ import { I18nextProvider } from 'react-i18next';
 import i18n, { initI18n } from '../src/i18n';
 import { useAuthStore } from '../src/store/authStore';
 import { useWalletStore } from '../src/store/walletStore';
+import { ensureIssuer } from '../src/forms/issuerSimulator';
 import { colors } from '../src/ui/theme';
 
 export default function RootLayout() {
@@ -20,7 +21,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     (async () => {
-      await Promise.all([initI18n(), initAuth(), loadWallet()]);
+      await Promise.all([initI18n(), initAuth(), loadWallet(), ensureIssuer()]);
       setReady(true);
     })();
   }, [initAuth, loadWallet]);
@@ -42,6 +43,7 @@ export default function RootLayout() {
           <Stack.Screen name="lock" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="credential/[id]" options={{ presentation: 'card' }} />
+          <Stack.Screen name="apply/[id]" options={{ presentation: 'card' }} />
         </Stack>
       </I18nextProvider>
     </SafeAreaProvider>

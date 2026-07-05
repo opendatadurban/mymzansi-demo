@@ -16,21 +16,24 @@ the assumptions, and the security model.
 ## The loop it proves
 
 ```
- Issuer (offline script)        Citizen app (holder)            Relying party (Verify tab)
- ─────────────────────          ────────────────────            ──────────────────────────
- sign credential  ──────────▶   hold (encrypted at rest)        scan QR
- + status list                  choose what to reveal  ───QR──▶ verify signature + expiry
-                                                                + revocation, fully offline
+ Apply (native form)     Pay (mocked)     Issue          Hold                 Present → Verify
+ ───────────────────     ────────────     ─────          ────                 ────────────────
+ multi-step wizard  ───▶ application ───▶ sign into ───▶ encrypted at rest ──▶ QR → relying party
+ (Apply tab)             fee              the wallet     choose what to reveal  verifies offline
 ```
 
-This is the `Issue credential → Citizen app → Verify` slice of the brief's
-Figure 1, built end to end and cryptographically real.
+This is the whole `Apply → Issue → Hold → Verify` journey of the brief's
+Figure 1, built native end to end and cryptographically real. A citizen applies
+for a government credential in a native form (a data-driven port of the DPI
+PoC's SilverStripe UserForms — **no WebView**), pays the fee, and the credential
+is issued straight into the wallet, where it can be presented and verified offline.
 
 ## Architecture
 
 | Layer | Where | What |
 |---|---|---|
 | Credential engine | [`src/crypto`](src/crypto) | Ed25519 selective-disclosure VCs (SD-JWT-inspired): `issue` / `present` / `verify`, salted per-claim digests, signed revocation status list. Runtime-agnostic (runs in Node and Hermes). |
+| Application forms | [`src/forms`](src/forms) | Data-driven native multi-step forms (matric, SASSA, Smart ID) + validation; an on-device **issuer simulator** signs the completed form into a wallet credential. |
 | Issuer | [`scripts/issue.ts`](scripts/issue.ts) | Stands in for the government issuing service. Mints the keypair, signs demo credentials + status list, writes the committed **public** trust anchor. |
 | Trust / verify | [`src/credential`](src/credential) | Schema registry (content-driven), trust anchor, offline verification entrypoint. |
 | Storage | [`src/store`](src/store) | Envelope encryption at rest — a hardware-backed key (Keystore/Keychain) wrapping an XChaCha20-Poly1305 wallet blob; PIN as a salted scrypt hash. Zustand stores. |

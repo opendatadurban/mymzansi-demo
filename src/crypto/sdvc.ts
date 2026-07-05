@@ -11,7 +11,7 @@
  */
 import { canonicalBytes, sha256Hex, bytesToHex, type Json } from './canonical';
 import { signBytes, verifyBytes } from './ed25519';
-import { randomBytes } from '@noble/hashes/utils';
+import { randomBytes } from './random';
 import type {
   ClaimValue,
   CredentialPayload,

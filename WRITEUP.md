@@ -26,6 +26,17 @@ the app can leak.
 
 ## 2. How it works
 
+### Applying for a credential (the Apply tab)
+A citizen applies for a government credential through a **native multi-step
+form** — matric certificate, SASSA grant, or Smart ID card. These are a
+data-driven port of the DPI PoC's SilverStripe UserForms: each form is a schema
+(`src/forms`) rendered by one generic native runner, with validation (required
+fields, email, SA ID Luhn check) and a stepped wizard. **Nothing is a WebView.**
+On completion the citizen pays the application fee (mocked) and the credential is
+**issued straight into the wallet**, where it can then be presented and verified.
+This proves the first half of the brief's loop — enrol, prove details, issue —
+in addition to the hold-and-verify half.
+
 ### The credential
 A credential is a set of **claims** (name, ID number, address lines, …). Rather
 than sign the plaintext, the issuer signs a set of **salted per-claim digests**
@@ -99,10 +110,20 @@ share the install link.
 - **Single-device demo.** Holder and relying party are bundled in one app so the
   whole loop can be shown on one or two phones. In production these are separate
   apps; the verifier needs only the public trust anchor and status list.
-- **The issuer is a local script**, standing in for the government issuing
-  service. There is intentionally **no backend**: verification is offline by
-  design, which is the interesting property to demonstrate. The wider platform
-  (data ingestion, payment engine, operator portal) is Part A scope, not this slice.
+- **The issuer is simulated locally.** Two stand-ins for the government issuing
+  service: an offline script (`npm run issue`) that pre-signs the proof-of-address
+  demo, and an on-device **issuer simulator** that signs credentials completed via
+  the Apply forms. The simulator's key is generated on the device and kept in the
+  keystore (never bundled); on this device the app also trusts it, so form-issued
+  credentials verify locally. In production, issuance is a separate service with
+  its key in a KMS/HSM, and its public key is a committed trust anchor. This is the
+  one deliberate demo shortcut so the apply→issue→verify loop runs with no backend.
+- **Payment is mocked.** The Apply flow shows a real fee and payment step but takes
+  no money; a real gateway (card tokenisation, PCI-DSS) is Part A scope. The citizen
+  is never charged.
+- **Form field content is English.** The app chrome (navigation, buttons,
+  validation, payment, wallet) is fully localised in all three languages; the form
+  *field labels* are English, translatable via the same mechanism.
 - **Canonicalisation** is a deterministic sorted-key JSON serialisation (JCS-like),
   sufficient here because the same function produces the signing input on both
   sides. A production build would adopt full RFC 8785 / a standard VC serialisation.

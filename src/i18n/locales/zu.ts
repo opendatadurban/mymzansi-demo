@@ -18,8 +18,38 @@ const zu: Translations = {
   },
   tabs: {
     wallet: 'Isikhwama',
+    apply: 'Isicelo',
     verify: 'Qinisekisa',
     settings: 'Izilungiselelo',
+  },
+  apply: {
+    title: 'Faka isicelo sesevisi',
+    subtitle: 'Faka isicelo sesitifiketi sikahulumeni. Uma sesikhishiwe, sizongena esikhwameni sakho.',
+    fee: 'Imali',
+  },
+  form: {
+    step: 'Isinyathelo {{current}} kwezingu-{{total}}',
+    next: 'Okulandelayo',
+    errors: {
+      required: 'Le nkambu iyadingeka.',
+      requiredCheck: 'Sicela umake leli bhokisi ukuze uqhubeke.',
+      email: 'Faka ikheli le-imeyili elivumelekile.',
+      tel: 'Faka inombolo yocingo evumelekile.',
+      date: 'Sebenzisa ifomethi ethi YYYY-MM-DD.',
+      idNumber: 'Faka inombolo kamazisi yaseNingizimu Afrika enezinombolo ezingu-13 evumelekile.',
+    },
+  },
+  payment: {
+    title: 'Inkokhelo',
+    securedNote: 'Inkokhelo iphathwa igeti lokukhokha; ayikho idatha yekhadi egciniwe.',
+    demoNote: 'Isibonelo: ayikho inkokhelo yangempela ethathwayo. Ukukhokha kukhipha isitifiketi esikhwameni sakho.',
+    pay: 'Khokha {{fee}}',
+    processing: 'Iyacutshungulwa…',
+  },
+  success: {
+    title: 'Isitifiketi sikhishiwe',
+    body: 'I-{{name}} yakho ingeziwe esikhwameni sakho.',
+    viewWallet: 'Buka isikhwama sami',
   },
   lock: {
     title: 'MyMzansi',

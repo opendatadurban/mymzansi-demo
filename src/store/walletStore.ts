@@ -18,6 +18,8 @@ interface WalletState {
   load: () => Promise<void>;
   /** Import the bundled demo credentials (stands in for receiving them from the issuer). */
   addDemoCredentials: () => Promise<number>;
+  /** Add a single credential (e.g. one just issued from a completed form). */
+  addCredential: (cred: HeldCredential) => Promise<void>;
   remove: (credentialId: string) => Promise<void>;
 }
 
@@ -53,6 +55,14 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     await persist(merged);
     set({ credentials: merged });
     return merged.length - existing.length;
+  },
+
+  addCredential: async (cred: HeldCredential) => {
+    const existing = get().credentials;
+    if (existing.some((c) => c.payload.cid === cred.payload.cid)) return;
+    const merged = [...existing, cred];
+    await persist(merged);
+    set({ credentials: merged });
   },
 
   remove: async (credentialId: string) => {

@@ -42,7 +42,15 @@ export interface HeldCredential {
   /** All disclosures, keyed by claim name for convenient selective presentation. */
   disclosures: Record<string, Disclosure>;
   /** Cosmetic metadata for the wallet UI (not signed). */
-  meta?: { title?: string; issuerName?: string; accent?: string };
+  meta?: {
+    title?: string;
+    issuerName?: string;
+    accent?: string;
+    /** Claim-name → human label, for credentials issued from a form. */
+    labels?: Record<string, string>;
+    /** Claim names that are sensitive (hidden by default when presenting). */
+    sensitive?: string[];
+  };
 }
 
 /** What travels in the QR code: the signed payload/signature plus only the chosen disclosures. */

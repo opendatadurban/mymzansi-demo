@@ -15,8 +15,7 @@ import { colors, font, radius, spacing } from '../../src/ui/theme';
 import { useWalletStore } from '../../src/store/walletStore';
 import { present } from '../../src/crypto/sdvc';
 import { PRESENTATION_QR_PREFIX } from '../../src/crypto/types';
-import { claimLabelKey, defaultDisclosedClaims, getSchema } from '../../src/credential/schema';
-import { getClaim, statusOf, formatDate } from '../../src/credential/display';
+import { getClaim, statusOf, formatDate, claimLabel, defaultDisclosure, sensitiveClaimNames } from '../../src/credential/display';
 
 export default function CredentialDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -27,11 +26,8 @@ export default function CredentialDetail() {
   const cred = useWalletStore((s) => s.credentials.find((c) => c.payload.cid === cid));
   const remove = useWalletStore((s) => s.remove);
 
-  const schema = cred ? getSchema(cred.payload.schema) : undefined;
   const claimNames = useMemo(() => (cred ? Object.keys(cred.disclosures) : []), [cred]);
-  const [selected, setSelected] = useState<Set<string>>(() =>
-    cred ? new Set(defaultDisclosedClaims(cred.payload.schema).filter((n) => cred.disclosures[n])) : new Set()
-  );
+  const [selected, setSelected] = useState<Set<string>>(() => (cred ? new Set(defaultDisclosure(cred)) : new Set()));
 
   if (!cred) {
     return (
@@ -57,7 +53,8 @@ export default function CredentialDetail() {
   const presentation = present(cred, [...selected]);
   const qrValue = PRESENTATION_QR_PREFIX + JSON.stringify(presentation);
 
-  const sensitiveNames = new Set(schema?.fields.filter((f) => f.sensitive).map((f) => f.name));
+  const sensitiveNames = new Set(sensitiveClaimNames(cred));
+  const labelFor = (name: string) => claimLabel(cred.payload.schema, name, t, cred.meta?.labels);
 
   return (
     <Screen scroll>
@@ -88,7 +85,7 @@ export default function CredentialDetail() {
             <Text style={styles.presetText}>{t('detail.revealAll')}</Text>
           </Pressable>
           <Pressable
-            onPress={() => setSelected(new Set(defaultDisclosedClaims(cred.payload.schema).filter((n) => cred.disclosures[n])))}
+            onPress={() => setSelected(new Set(defaultDisclosure(cred)))}
             accessibilityRole="button"
             style={styles.preset}
           >
@@ -100,7 +97,7 @@ export default function CredentialDetail() {
           <View key={name} style={styles.claimRow}>
             <View style={styles.claimText}>
               <View style={styles.claimLabelRow}>
-                <Text style={font.label}>{t(claimLabelKey(cred.payload.schema, name))}</Text>
+                <Text style={font.label}>{labelFor(name)}</Text>
                 {sensitiveNames.has(name) && <Pill text={t('detail.sensitive')} tone="warning" />}
               </View>
               <Text style={font.body}>{String(getClaim(cred, name))}</Text>
@@ -109,7 +106,7 @@ export default function CredentialDetail() {
               value={selected.has(name)}
               onValueChange={() => toggle(name)}
               trackColor={{ true: colors.primary, false: colors.border }}
-              accessibilityLabel={t(claimLabelKey(cred.payload.schema, name))}
+              accessibilityLabel={labelFor(name)}
             />
           </View>
         ))}
