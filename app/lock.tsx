@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   keyPressed: { backgroundColor: colors.surfaceAlt },
-  keyText: { fontSize: 26, fontWeight: '500', color: colors.text },
+  keyText: { fontSize: 26, fontFamily: 'Inter_500Medium', color: colors.text },
   bio: { alignItems: 'center', paddingVertical: spacing.lg },
   bioText: { ...font.title, color: colors.primary },
 });

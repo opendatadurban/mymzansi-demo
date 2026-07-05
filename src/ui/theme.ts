@@ -1,24 +1,25 @@
 /**
- * A small design system. Colours chosen for WCAG 2.1 AA contrast on the
- * surfaces they're used on (body text ≥ 4.5:1, large text/icons ≥ 3:1).
+ * A small design system. Palette taken from the DPI web PoC (themes/app SCSS),
+ * kept in sync with the HeroUI theme in themes/mzansi.css. Colours meet WCAG 2.1
+ * AA contrast on the surfaces they're used on.
  */
 export const colors = {
-  bg: '#F5F6F8',
+  bg: '#F4F5F6',
   surface: '#FFFFFF',
-  surfaceAlt: '#EEF1F4',
-  border: '#D7DCE1',
-  text: '#14181F', // 15.8:1 on surface
-  textMuted: '#5A6472', // 4.9:1 on surface
-  primary: '#0B7A4B', // SA green; 4.8:1 on white for text/icons
-  primaryDark: '#095C39',
+  surfaceAlt: '#F0F8F5', // green-pale from the web PoC
+  border: '#E2E4E6',
+  text: '#231F20', // web PoC $color-black
+  textMuted: '#6B6B6B',
+  primary: '#00855B', // web PoC $color-green
+  primaryDark: '#006B49',
   onPrimary: '#FFFFFF',
-  success: '#0B7A4B',
-  successBg: '#E4F3EC',
-  danger: '#B3261E', // 5.9:1 on white
-  dangerBg: '#FBE9E7',
-  warning: '#8A5A00',
-  warningBg: '#FBF0D9',
-  focus: '#1A73E8',
+  success: '#00855B',
+  successBg: '#F0F8F5',
+  danger: '#DF3226', // web PoC $color-red
+  dangerBg: '#FBECEA',
+  warning: '#C28209', // web PoC $color-ochre
+  warningBg: '#FBF3E2',
+  focus: '#084C91', // web PoC $color-blue
 };
 
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 } as const;
@@ -26,10 +27,10 @@ export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 } as cons
 export const radius = { sm: 8, md: 12, lg: 16, pill: 999 } as const;
 
 export const font = {
-  h1: { fontSize: 28, fontWeight: '700' as const, color: colors.text },
-  h2: { fontSize: 22, fontWeight: '700' as const, color: colors.text },
-  title: { fontSize: 18, fontWeight: '600' as const, color: colors.text },
-  body: { fontSize: 16, fontWeight: '400' as const, color: colors.text },
-  label: { fontSize: 13, fontWeight: '600' as const, color: colors.textMuted },
-  small: { fontSize: 13, fontWeight: '400' as const, color: colors.textMuted },
+  h1: { fontSize: 28, fontFamily: 'Inter_700Bold', color: colors.text, letterSpacing: -0.4 },
+  h2: { fontSize: 22, fontFamily: 'Inter_700Bold', color: colors.text, letterSpacing: -0.3 },
+  title: { fontSize: 18, fontFamily: 'Inter_600SemiBold', color: colors.text },
+  body: { fontSize: 16, fontFamily: 'Inter_400Regular', color: colors.text },
+  label: { fontSize: 13, fontFamily: 'Inter_600SemiBold', color: colors.textMuted },
+  small: { fontSize: 13, fontFamily: 'Inter_400Regular', color: colors.textMuted },
 };
