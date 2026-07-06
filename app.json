@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "MyMzansi",
-    "slug": "mymzansi",
-    "owner": "tsh-sank",
+    "slug": "mymzansi-demo",
+    "owner": "open-cities-lab-dpi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -52,7 +52,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "51165660-ecdf-404b-8cf4-77ba3ca610dd"
+        "projectId": "53d681e6-ddbc-4f5b-bbd4-83d7c2b3ab2b"
       }
     }
   }
