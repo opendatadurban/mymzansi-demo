@@ -43,13 +43,27 @@ jobs:
           APK_URL=$(jq -r '.[0].artifacts.applicationArchiveUrl // .[0].artifacts.buildUrl' build.json)
           test -n "$APK_URL" && test "$APK_URL" != "null" || { echo "No APK URL in build output"; cat build.json; exit 1; }
           echo "apk_url=$APK_URL" >> "$GITHUB_OUTPUT"
+          BUILD_ID=$(jq -r '.[0].id' build.json)
+          echo "expo_url=https://expo.dev/accounts/open-cities-lab-dpi/projects/mymzansi-demo/builds/$BUILD_ID" >> "$GITHUB_OUTPUT"
 
       - name: Download the APK
         run: curl -fSL -o "mymzansi-${{ github.ref_name }}.apk" "${{ steps.build.outputs.apk_url }}"
+
+      - name: Compose release notes
+        run: |
+          cat > RELEASE_BODY.md <<EOF
+          ### Install
+
+          - **Android APK (permanent):** \`mymzansi-${{ github.ref_name }}.apk\` attached below.
+          - **Expo install page (scan the QR / quick install):** ${{ steps.build.outputs.expo_url }}
+
+          _The Expo page's build artifact expires after ~30 days on the free plan; the attached APK does not._
+          EOF
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: mymzansi-${{ github.ref_name }}.apk
           fail_on_unmatched_files: true
+          body_path: RELEASE_BODY.md
           generate_release_notes: true
