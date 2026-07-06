@@ -1,0 +1,59 @@
+/* MyMzansi theme — palette taken from the DPI web PoC (themes/app SCSS). */
+@layer theme {
+  :root {
+    @variant mzansi-light {
+      --font-normal: 'Inter_400Regular';
+      --font-medium: 'Inter_500Medium';
+      --font-semibold: 'Inter_600SemiBold';
+      --font-bold: 'Inter_700Bold';
+
+      --radius: 0.625rem;
+
+      --background: #f4f5f6;
+      --foreground: #231f20;
+
+      --surface: #ffffff;
+      --surface-foreground: #231f20;
+      --surface-secondary: #f0f8f5;
+      --surface-secondary-foreground: #231f20;
+      --surface-tertiary: #eff1f2;
+      --surface-tertiary-foreground: #231f20;
+      --surface-shadow: #00000014;
+
+      --overlay: #ffffff;
+      --overlay-foreground: #231f20;
+      --overlay-shadow: #0000001f;
+      --backdrop: #00000040;
+
+      --muted: #6b6b6b;
+      --border: #e2e4e6;
+      --separator: #edeef0;
+
+      --default: #eff1f2;
+      --default-foreground: #231f20;
+
+      /* Brand green from the web PoC ($color-green: #00855B) */
+      --accent: #00855b;
+      --accent-foreground: #ffffff;
+
+      --link: #084c91;
+      --focus: #084c91;
+
+      --success: #00855b;
+      --success-foreground: #ffffff;
+      --danger: #df3226;
+      --danger-foreground: #ffffff;
+      --warning: #c28209;
+      --warning-foreground: #ffffff;
+
+      --field-background: #ffffff;
+      --field-foreground: #231f20;
+      --field-border: #d8d8d8;
+      --field-placeholder: #949494;
+      --field-shadow: #00000000;
+
+      --segment: #eff1f2;
+      --segment-foreground: #231f20;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+@import 'uniwind';
+@import 'heroui-native/styles';
+@import './themes/mzansi.css';
+
+@source './node_modules/heroui-native/lib';
+
+/*
+ * Uniwind requires every theme to declare the same variable set. HeroUI's base
+ * light/dark themes don't ship the font/radius tokens, so we add them here to
+ * match themes/mzansi.css (otherwise: "All themes must have the same variables").
+ */
+@layer theme {
+  :root {
+    @variant light {
+      --font-normal: 'Inter_400Regular';
+      --font-medium: 'Inter_500Medium';
+      --font-semibold: 'Inter_600SemiBold';
+      --font-bold: 'Inter_700Bold';
+      --radius: 0.625rem;
+    }
+    @variant dark {
+      --font-normal: 'Inter_400Regular';
+      --font-medium: 'Inter_500Medium';
+      --font-semibold: 'Inter_600SemiBold';
+      --font-bold: 'Inter_700Bold';
+      --radius: 0.625rem;
+    }
+  }
+}

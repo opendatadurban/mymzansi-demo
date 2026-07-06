@@ -1,7 +1,8 @@
 /** Native renderer for one form field. All field types render natively — no WebView. */
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { TextField, Input, Label, Description, FieldError } from 'heroui-native';
 import { colors, font, radius, spacing } from './theme';
 import type { FormField as FieldDef } from '../forms/types';
 
@@ -12,11 +13,34 @@ interface Props {
   onChange: (value: string | boolean) => void;
 }
 
+const TEXT_TYPES = ['text', 'email', 'tel', 'idNumber', 'date'];
+
 export function FormFieldView({ field, value, error, onChange }: Props) {
   if (field.type === 'note') {
     return <Text style={[font.title, styles.note]}>{field.content}</Text>;
   }
 
+  // Text-like fields use HeroUI TextField (label + input + hint + error together).
+  if (TEXT_TYPES.includes(field.type)) {
+    const keyboardType =
+      field.type === 'email' ? 'email-address' : field.type === 'tel' ? 'phone-pad' : field.type === 'idNumber' ? 'number-pad' : 'default';
+    return (
+      <TextField isRequired={field.required} isInvalid={!!error}>
+        <Label>{field.label}</Label>
+        <Input
+          value={typeof value === 'string' ? value : ''}
+          onChangeText={onChange}
+          keyboardType={keyboardType}
+          autoCapitalize={field.type === 'email' ? 'none' : 'sentences'}
+          placeholder={field.type === 'date' ? 'YYYY-MM-DD' : undefined}
+        />
+        {!!field.hint && <Description>{field.hint}</Description>}
+        {!!error && <FieldError>{error}</FieldError>}
+      </TextField>
+    );
+  }
+
+  // Choice / boolean / file fields.
   return (
     <View style={styles.wrap}>
       {field.type !== 'checkbox' && (
@@ -26,9 +50,7 @@ export function FormFieldView({ field, value, error, onChange }: Props) {
         </Text>
       )}
       {!!field.hint && <Text style={styles.hint}>{field.hint}</Text>}
-
       {renderControl(field, value, onChange)}
-
       {!!error && (
         <Text style={styles.error} accessibilityLiveRegion="polite">
           {error}
@@ -74,11 +96,7 @@ function renderControl(field: FieldDef, value: Props['value'], onChange: Props['
           accessibilityState={{ checked: !!value }}
           style={styles.checkboxRow}
         >
-          <Ionicons
-            name={value ? 'checkbox' : 'square-outline'}
-            size={24}
-            color={value ? colors.primary : colors.textMuted}
-          />
+          <Ionicons name={value ? 'checkbox' : 'square-outline'} size={24} color={value ? colors.primary : colors.textMuted} />
           <Text style={[font.body, styles.checkboxLabel]}>
             {field.label}
             {field.required && <Text style={styles.req}> *</Text>}
@@ -94,22 +112,8 @@ function renderControl(field: FieldDef, value: Props['value'], onChange: Props['
         </Pressable>
       );
 
-    default: {
-      const keyboardType =
-        field.type === 'email' ? 'email-address' : field.type === 'tel' ? 'phone-pad' : field.type === 'idNumber' ? 'number-pad' : 'default';
-      return (
-        <TextInput
-          style={styles.input}
-          value={typeof value === 'string' ? value : ''}
-          onChangeText={onChange}
-          keyboardType={keyboardType}
-          autoCapitalize={field.type === 'email' ? 'none' : 'sentences'}
-          placeholder={field.type === 'date' ? 'YYYY-MM-DD' : undefined}
-          placeholderTextColor={colors.textMuted}
-          accessibilityLabel={field.label}
-        />
-      );
-    }
+    default:
+      return null;
   }
 }
 
@@ -119,16 +123,6 @@ const styles = StyleSheet.create({
   label: { ...font.label, color: colors.text },
   req: { color: colors.danger },
   hint: { ...font.small },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.md,
-    minHeight: 48,
-    fontSize: 16,
-    color: colors.text,
-    backgroundColor: colors.surface,
-  },
   options: { gap: spacing.sm },
   option: {
     flexDirection: 'row',
