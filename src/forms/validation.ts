@@ -3,12 +3,15 @@ import type { FormField, FormStep, FormAnswers } from './types';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** South African ID: 13 digits with a valid Luhn check digit. */
+/** South African ID: 13 digits with a valid Luhn check digit.
+ * Whitespace is stripped first — IDs are commonly written/entered with spaces
+ * ("YYMMDD SSSS CAZ"), and a pasted value can carry a stray space or NBSP. */
 export function isValidSaId(value: string): boolean {
-  if (!/^\d{13}$/.test(value)) return false;
+  const digits = value.replace(/\s+/g, '');
+  if (!/^\d{13}$/.test(digits)) return false;
   let sum = 0;
   for (let i = 0; i < 13; i++) {
-    let d = Number(value[i]);
+    let d = Number(digits[i]);
     if (i % 2 === 1) {
       d *= 2;
       if (d > 9) d -= 9;

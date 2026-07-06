@@ -17,6 +17,11 @@ describe('isValidSaId', () => {
   it('rejects non-digits', () => {
     expect(isValidSaId('90022048000ab')).toBe(false);
   });
+  it('tolerates spaces around and within the number', () => {
+    expect(isValidSaId(' 8001015009087 ')).toBe(true);
+    expect(isValidSaId('800101 5009 087')).toBe(true);
+    expect(isValidSaId('8001015009087 ')).toBe(true); // trailing whitespace
+  });
 });
 
 describe('validateField', () => {
