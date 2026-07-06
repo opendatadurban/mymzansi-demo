@@ -34,7 +34,17 @@ export const SASSA: ServiceForm = {
             { value: 'asylum', label: 'Asylum seeker / refugee permit number' },
           ],
         },
-        { name: 'id_number', type: 'idNumber', label: 'Identification number', hint: 'Your 13-digit ID or permit number', required: true, claim: 'id_number', sensitive: true },
+        {
+          name: 'id_number',
+          type: 'idNumber',
+          label: 'Identification number',
+          hint: 'Your 13-digit ID or permit number',
+          required: true,
+          claim: 'id_number',
+          sensitive: true,
+          // Permit numbers are not SA IDs — only Luhn-check the SA ID route.
+          idCheckWhen: { field: 'identity_type', equals: 'sa_id' },
+        },
         { name: 'given_name', type: 'text', label: 'Forenames', hint: 'As they appear on your ID document', required: true, claim: 'given_name' },
         { name: 'family_name', type: 'text', label: 'Surname', required: true, claim: 'family_name' },
         { name: 'birth_date', type: 'date', label: 'Date of birth', required: true, claim: 'birth_date' },

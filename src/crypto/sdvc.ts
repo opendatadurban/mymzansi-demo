@@ -49,8 +49,10 @@ export interface IssueInput {
 export function issue(input: IssueInput): HeldCredential {
   const disclosures: Record<string, Disclosure> = {};
   const digests: string[] = [];
-  // Deterministic claim order in → deterministic salting is NOT wanted, but the
-  // digest array is sorted so payload canonicalisation is stable regardless.
+  // Every claim gets a fresh random salt, so equal values never share a digest.
+  // The digest array is then sorted: the signed payload stays canonical no
+  // matter what order claims arrived in, and the ordering leaks nothing about
+  // which digest belongs to which claim.
   for (const name of Object.keys(input.claims)) {
     const d: Disclosure = [makeSalt(), name, input.claims[name]];
     disclosures[name] = d;

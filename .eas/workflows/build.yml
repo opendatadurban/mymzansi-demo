@@ -1,0 +1,17 @@
+name: Build Android
+
+# Runs on EAS Build servers, triggered by the Expo GitHub App on every
+# push to main. Requires the repo to be connected to the Expo project
+# (dashboard → project settings → GitHub).
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_android:
+    name: Android preview APK
+    type: build
+    params:
+      platform: android
+      profile: preview

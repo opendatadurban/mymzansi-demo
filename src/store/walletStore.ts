@@ -58,6 +58,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   },
 
   addCredential: async (cred: HeldCredential) => {
+    if (!isAuthentic(cred)) throw new Error('Credential failed verification and was not added.');
     const existing = get().credentials;
     if (existing.some((c) => c.payload.cid === cred.payload.cid)) return;
     const merged = [...existing, cred];

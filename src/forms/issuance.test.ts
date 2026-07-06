@@ -36,6 +36,11 @@ describe('buildClaims', () => {
     expect(claims.given_name).toBe('A');
     expect(claims.family_name).toBeUndefined();
   });
+
+  it('stores the option label, not the code, for choice fields', () => {
+    const claims = buildClaims(SASSA, { identity_type: 'sa_id', id_number: '8807155555083' });
+    expect(claims.identity_type).toBe('South African ID number');
+  });
 });
 
 describe('issueFromForm → verify', () => {

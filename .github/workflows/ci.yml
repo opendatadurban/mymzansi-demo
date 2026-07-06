@@ -5,10 +5,18 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     name: Typecheck · Lint · Test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -31,6 +39,8 @@ jobs:
 
       - name: Verify issuer + verifier agree (re-issue is reproducible)
         env:
+          # Deliberately public all-zeros TEST FIXTURE key — not a real secret.
+          # Real issuer keys never appear in this repo (see scripts/issue.ts).
           ISSUER_SK: '0000000000000000000000000000000000000000000000000000000000000001'
         run: |
           npm run issue
@@ -39,6 +49,7 @@ jobs:
   bundle:
     name: Metro bundle (Android)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -48,3 +59,9 @@ jobs:
       - run: npm ci
       - name: Export Android bundle
         run: npx expo export --platform android --output-dir dist
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-bundle
+          path: dist
+          retention-days: 7

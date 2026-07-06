@@ -1,6 +1,10 @@
 {
-  "name": "citizen_app_poc",
+  "name": "mymzansi-demo",
   "version": "1.0.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",

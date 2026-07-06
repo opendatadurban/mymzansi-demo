@@ -32,4 +32,20 @@ describe('locale parity', () => {
     });
     expect(empties).toEqual([]);
   });
+
+  it.each([
+    ['zu', zu],
+    ['af', af],
+  ])('%s keeps every {{placeholder}} that en uses', (_name, locale) => {
+    const placeholders = (s: string) => [...s.matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1]).sort();
+    const valueAt = (obj: unknown, path: string) =>
+      path.split('.').reduce<unknown>((o, k) => (o as Record<string, unknown>)?.[k], obj);
+    const mismatches = enKeys.filter((path) => {
+      const enValue = valueAt(en, path);
+      const other = valueAt(locale, path);
+      if (typeof enValue !== 'string' || typeof other !== 'string') return false;
+      return placeholders(enValue).join() !== placeholders(other).join();
+    });
+    expect(mismatches).toEqual([]);
+  });
 });

@@ -121,9 +121,20 @@ share the install link.
 - **Payment is mocked.** The Apply flow shows a real fee and payment step but takes
   no money; a real gateway (card tokenisation, PCI-DSS) is Part A scope. The citizen
   is never charged.
-- **Form field content is English.** The app chrome (navigation, buttons,
-  validation, payment, wallet) is fully localised in all three languages; the form
-  *field labels* are English, translatable via the same mechanism.
+- **Form content is English.** The app chrome (navigation, buttons, validation,
+  payment, wallet, verify) is fully localised in all three languages; the form
+  *content* — service titles, step titles, field labels and submit labels — is
+  English, translatable via the same mechanism.
+- **The PIN gates the UI.** Wallet data is encrypted at rest under the
+  device-keystore key; the PIN/biometric lock gates access to the app's screens
+  rather than deriving the encryption key. Production hardening would wrap the
+  data key with a PIN/biometric-bound Keystore key and add failed-attempt
+  throttling (omitted here so the demo stays easy to test).
+- **Revocation applies to the bundled list.** The seeded Proof of Address
+  credentials reference the bundled, signed status list, so revocation is checked
+  offline. Form-issued demo credentials reference a list the verifier does not
+  have, so for them the verifier checks signature and validity but not revocation
+  — in production each issuer publishes its own list.
 - **Canonicalisation** is a deterministic sorted-key JSON serialisation (JCS-like),
   sufficient here because the same function produces the signing input on both
   sides. A production build would adopt full RFC 8785 / a standard VC serialisation.
@@ -143,5 +154,5 @@ share the install link.
 - Storage/encryption: [`src/store/secureStorage.ts`](src/store/secureStorage.ts).
 - How to run and test: [`README.md`](README.md).
 
-38 unit tests, strict TypeScript, ESLint, and CI (typecheck · lint · test ·
+59 unit tests, strict TypeScript, ESLint, and CI (typecheck · lint · test ·
 reproducible issuance · Metro bundle) all green.

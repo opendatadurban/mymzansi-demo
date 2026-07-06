@@ -2,9 +2,11 @@
  * Encryption at rest for wallet data.
  *
  * Envelope model:
- *  - A 256-bit data-encryption key (DEK) is generated once and kept in the
- *    platform keystore via expo-secure-store (Android Keystore / iOS Keychain).
- *    It never leaves secure hardware-backed storage.
+ *  - A 256-bit data-encryption key (DEK) is generated on-device at first use
+ *    and stored via expo-secure-store, which keeps it wrapped by a platform
+ *    Keystore/Keychain key. The raw DEK is only materialised in app memory for
+ *    the moment of an encrypt/decrypt. (A production build would use a
+ *    non-exportable, PIN/biometric-bound Keystore key instead.)
  *  - The wallet itself is serialised, encrypted with XChaCha20-Poly1305 (AEAD)
  *    under the DEK, and stored as ciphertext in AsyncStorage. This keeps large
  *    payloads out of SecureStore's small per-value limit while still being
@@ -90,7 +92,9 @@ export async function setPin(pin: string): Promise<void> {
   const { scrypt } = await import('@noble/hashes/scrypt');
   const salt = randomBytes(16);
   const hash = scrypt(utf8ToBytes(pin), salt, { N: 2 ** 13, r: 8, p: 1, dkLen: 32 });
-  await SecureStore.setItemAsync(PIN_HASH_KEY, `${bytesToHex(salt)}.${bytesToHex(hash)}`);
+  await SecureStore.setItemAsync(PIN_HASH_KEY, `${bytesToHex(salt)}.${bytesToHex(hash)}`, {
+    keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+  });
 }
 
 export async function hasPin(): Promise<boolean> {
@@ -103,5 +107,9 @@ export async function verifyPin(pin: string): Promise<boolean> {
   const { scrypt } = await import('@noble/hashes/scrypt');
   const [saltHex, hashHex] = stored.split('.');
   const hash = scrypt(utf8ToBytes(pin), hexToBytes(saltHex), { N: 2 ** 13, r: 8, p: 1, dkLen: 32 });
-  return bytesToHex(hash) === hashHex;
+  // Constant-time comparison — no early exit on the first differing byte.
+  const expected = hexToBytes(hashHex);
+  let diff = hash.length ^ expected.length;
+  for (let i = 0; i < hash.length; i++) diff |= hash[i] ^ (expected[i] ?? 0);
+  return diff === 0;
 }

@@ -18,7 +18,10 @@ export function buildClaims(form: ServiceForm, answers: FormAnswers): Record<str
       if (!field.claim) continue;
       const v = answers[field.name];
       if (v === undefined || v === '' || v === false) continue;
-      claims[field.claim] = String(v);
+      // Choice fields store the human label ("Female"), not the option code ("F") —
+      // the claim is what a relying party reads on the verify screen.
+      const option = field.options?.find((o) => o.value === v);
+      claims[field.claim] = option ? option.label : String(v);
     }
   }
   return { ...claims, ...(form.fixedClaims ?? {}) };

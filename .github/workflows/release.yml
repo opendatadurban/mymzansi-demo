@@ -1,0 +1,55 @@
+name: Release APK
+
+# On a version tag (v1.2.3), build the APK on EAS, then attach it to a
+# GitHub Release. Release assets never expire, unlike EAS build artifacts.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write # create the Release and upload the .apk asset
+
+jobs:
+  build-and-release:
+    name: Build on EAS · attach APK to Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Build APK on EAS and wait for it
+        id: build
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas build \
+            --platform android \
+            --profile preview \
+            --non-interactive \
+            --wait \
+            --json > build.json
+          APK_URL=$(jq -r '.[0].artifacts.applicationArchiveUrl // .[0].artifacts.buildUrl' build.json)
+          test -n "$APK_URL" && test "$APK_URL" != "null" || { echo "No APK URL in build output"; cat build.json; exit 1; }
+          echo "apk_url=$APK_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Download the APK
+        run: curl -fSL -o "mymzansi-${{ github.ref_name }}.apk" "${{ steps.build.outputs.apk_url }}"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mymzansi-${{ github.ref_name }}.apk
+          fail_on_unmatched_files: true
+          generate_release_notes: true

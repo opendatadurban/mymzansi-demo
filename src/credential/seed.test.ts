@@ -16,8 +16,9 @@ const trustedIssuers: Record<string, string> = Object.fromEntries(
 const held = seed.credentials as unknown as HeldCredential[];
 const sl = statusList as unknown as SignedStatusList;
 
-// The credential's own issuance time (well in the past) — verify around "now".
-const NOW = Math.floor(Date.now() / 1000);
+// Pin "now" to the committed status list's own issuance time so the suite is
+// reproducible and never goes stale as the artifacts age on disk.
+const NOW = sl.payload.iat + 3600;
 
 describe('committed seed artifacts', () => {
   it('has a valid credential and a revoked one', () => {

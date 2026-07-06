@@ -24,11 +24,13 @@ const af: Translations = {
   apply: {
     title: 'Doen aansoek om ’n diens',
     subtitle: 'Doen aansoek om ’n regeringsgeloofsbrief. Sodra dit uitgereik is, verskyn dit in jou beursie.',
-    fee: 'Fooi',
   },
   form: {
     step: 'Stap {{current}} van {{total}}',
     next: 'Volgende',
+    chooseFile: 'Kies lêer',
+    fileAttached: 'Foto aangeheg',
+    datePlaceholder: 'JJJJ-MM-DD',
     errors: {
       required: 'Hierdie veld is verplig.',
       requiredCheck: 'Merk asseblief hierdie blokkie om voort te gaan.',
@@ -44,6 +46,7 @@ const af: Translations = {
     demoNote: 'Demo: geen werklike betaling word geneem nie. Betaling reik die geloofsbrief aan jou beursie uit.',
     pay: 'Betaal {{fee}}',
     processing: 'Verwerk tans…',
+    failed: 'Iets het verkeerd geloop en die geloofsbrief is nie uitgereik nie. Geen betaling is geneem nie — probeer asseblief weer.',
   },
   success: {
     title: 'Geloofsbrief uitgereik',
@@ -66,7 +69,7 @@ const af: Translations = {
   wallet: {
     title: 'My Beursie',
     empty: 'Jy het nog geen geloofsbriewe nie.',
-    emptyHint: 'Voeg jou Bewys van Adres by om te begin.',
+    emptyHint: 'Voeg die demo-geloofsbriewe by, of doen aansoek op die Aansoek-oortjie.',
     addDemo: 'Voeg demo-geloofsbriewe by',
     added: 'Geloofsbriewe by jou beursie gevoeg.',
     verifiedBadge: 'Geverifieer',
@@ -76,7 +79,7 @@ const af: Translations = {
     issuedBy: 'Uitgereik deur',
     expires: 'Verval',
     present: 'Deel hierdie geloofsbrief',
-    presentSubtitle: 'Kies wat om te wys. Alles anders bly verborge.',
+    presentSubtitle: 'Kies wat om te wys. Al die res bly versteek.',
     showQr: 'Wys QR-kode',
     qrHint: '’n Vertrouende party skandeer dit om jou geloofsbrief te verifieer.',
     revealAll: 'Wys alles',
@@ -84,6 +87,7 @@ const af: Translations = {
     sensitive: 'Sensitief',
     revoked: 'Hierdie geloofsbrief is herroep.',
     remove: 'Verwyder uit beursie',
+    removeConfirm: 'Dit verwyder die geloofsbrief uit jou beursie op hierdie toestel.',
   },
   verify: {
     title: 'Verifieer ’n geloofsbrief',
@@ -93,6 +97,7 @@ const af: Translations = {
     permissionTitle: 'Kameratoegang benodig',
     permissionBody: 'Laat kameratoegang toe om geloofsbriewe te skandeer.',
     grant: 'Laat kamera toe',
+    openSettings: 'Maak instellings oop',
     valid: 'Geldige geloofsbrief',
     invalid: 'Nie geldig nie',
     issuer: 'Uitreiker',

@@ -30,6 +30,7 @@ export default function ApplyRunner() {
   const [answers, setAnswers] = useState<FormAnswers>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [phase, setPhase] = useState<Phase>({ kind: 'step', index: 0 });
+  const [payError, setPayError] = useState(false);
 
   if (!form) {
     return (
@@ -51,9 +52,16 @@ export default function ApplyRunner() {
     const paying = phase.kind === 'paying';
     const pay = async () => {
       setPhase({ kind: 'paying' });
-      const cred = await issueService(form, answers);
-      await addCredential(cred);
-      setPhase({ kind: 'done' });
+      setPayError(false);
+      try {
+        const cred = await issueService(form, answers);
+        await addCredential(cred);
+        setPhase({ kind: 'done' });
+      } catch {
+        // Never strand the user on "Processing…" — back to payment with a message.
+        setPhase({ kind: 'payment' });
+        setPayError(true);
+      }
     };
     return (
       <Screen scroll>
@@ -68,6 +76,11 @@ export default function ApplyRunner() {
           <Text style={font.small}>{t('payment.securedNote')}</Text>
         </Card>
         <Text style={[font.small, styles.demoNote]}>{t('payment.demoNote')}</Text>
+        {payError && (
+          <Text style={[font.small, { color: colors.danger }]} accessibilityLiveRegion="polite">
+            {t('payment.failed')}
+          </Text>
+        )}
         <Button title={paying ? t('payment.processing') : t('payment.pay', { fee: form.fee })} onPress={pay} loading={paying} />
         {!paying && <Button title={t('common.back')} variant="secondary" onPress={() => setPhase({ kind: 'step', index: form.steps.length - 1 })} />}
       </Screen>
