@@ -63,7 +63,7 @@ revocation caught offline.
 ```bash
 npm run typecheck    # tsc --noEmit, strict
 npm run lint         # eslint (eslint-config-expo)
-npm test             # 38 unit tests: engine, canonicalisation, i18n parity, scan
+npm test             # 59 unit tests: engine, canonicalisation, forms, i18n parity, scan
 npm run test:coverage
 ```
 

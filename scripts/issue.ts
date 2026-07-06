@@ -92,7 +92,10 @@ const statusList: SignedStatusList = issueStatusList({
   list: STATUS_LIST,
   iss: issuerId,
   iat: now,
-  exp: now + 7 * 24 * 3600, // verifiers must refresh weekly
+  // Long-lived so the committed demo artifacts stay verifiable for assessors.
+  // In production the issuer republishes a short-lived list (e.g. weekly) and
+  // verifiers reject a stale one — the engine enforces exactly that (`exp`).
+  exp: now + 180 * 24 * 3600,
   revoked: [5],
   privateKeyHex,
 });

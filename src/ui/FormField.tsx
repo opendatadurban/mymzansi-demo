@@ -1,6 +1,7 @@
 /** Native renderer for one form field. All field types render natively — no WebView. */
 import React from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { TextField, Input, Label, Description, FieldError } from 'heroui-native';
 import { colors, font, radius, spacing } from './theme';
@@ -16,6 +17,7 @@ interface Props {
 const TEXT_TYPES = ['text', 'email', 'tel', 'idNumber', 'date'];
 
 export function FormFieldView({ field, value, error, onChange }: Props) {
+  const { t } = useTranslation();
   if (field.type === 'note') {
     return <Text style={[font.title, styles.note]}>{field.content}</Text>;
   }
@@ -32,7 +34,7 @@ export function FormFieldView({ field, value, error, onChange }: Props) {
           onChangeText={onChange}
           keyboardType={keyboardType}
           autoCapitalize={field.type === 'email' ? 'none' : 'sentences'}
-          placeholder={field.type === 'date' ? 'YYYY-MM-DD' : undefined}
+          placeholder={field.type === 'date' ? t('form.datePlaceholder') : undefined}
         />
         {!!field.hint && <Description>{field.hint}</Description>}
         {!!error && <FieldError>{error}</FieldError>}
@@ -50,7 +52,7 @@ export function FormFieldView({ field, value, error, onChange }: Props) {
         </Text>
       )}
       {!!field.hint && <Text style={styles.hint}>{field.hint}</Text>}
-      {renderControl(field, value, onChange)}
+      {renderControl(field, value, onChange, t)}
       {!!error && (
         <Text style={styles.error} accessibilityLiveRegion="polite">
           {error}
@@ -60,7 +62,12 @@ export function FormFieldView({ field, value, error, onChange }: Props) {
   );
 }
 
-function renderControl(field: FieldDef, value: Props['value'], onChange: Props['onChange']) {
+function renderControl(
+  field: FieldDef,
+  value: Props['value'],
+  onChange: Props['onChange'],
+  t: (key: string) => string
+) {
   switch (field.type) {
     case 'radio':
     case 'dropdown':
@@ -108,7 +115,7 @@ function renderControl(field: FieldDef, value: Props['value'], onChange: Props['
       return (
         <Pressable onPress={() => onChange(value ? '' : 'attached.jpg')} accessibilityRole="button" style={styles.file}>
           <Ionicons name={value ? 'checkmark-circle' : 'cloud-upload-outline'} size={22} color={value ? colors.success : colors.primary} />
-          <Text style={[font.body, { color: colors.primary }]}>{value ? 'Photo attached' : 'Choose file'}</Text>
+          <Text style={[font.body, { color: colors.primary }]}>{value ? t('form.fileAttached') : t('form.chooseFile')}</Text>
         </Pressable>
       );
 

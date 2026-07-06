@@ -3,9 +3,11 @@ import { present } from '../crypto/sdvc';
 import { PRESENTATION_QR_PREFIX } from '../crypto/types';
 import type { HeldCredential } from '../crypto/types';
 import seed from '../../assets/credentials/seed.json';
+import statusList from '../../assets/credentials/statuslist.json';
 
 const held = seed.credentials as unknown as HeldCredential[];
-const NOW = Math.floor(Date.now() / 1000);
+// Pinned to the committed status list's issuance time — reproducible, never stale.
+const NOW = statusList.payload.iat + 3600;
 
 function qrFor(cred: HeldCredential, claims: string[]): string {
   return PRESENTATION_QR_PREFIX + JSON.stringify(present(cred, claims));

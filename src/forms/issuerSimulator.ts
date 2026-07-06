@@ -24,6 +24,15 @@ const KEY = 'mymzansi.issuer.v1';
 export const ISSUER_ID = 'did:web:issuer.mymzansi.local';
 export const ISSUER_NAME = 'MyMzansi issuing service (demo)';
 
+/** RFC 4122 v4 UUID from secure random bytes (Hermes has no crypto.randomUUID). */
+function uuidV4(): string {
+  const b = getRandomBytes(16);
+  b[6] = (b[6] & 0x0f) | 0x40; // version 4
+  b[8] = (b[8] & 0x3f) | 0x80; // variant 10xx
+  const h = bytesToHex(b);
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+}
+
 async function getOrCreateIssuerKey(): Promise<string> {
   const existing = await SecureStore.getItemAsync(KEY);
   if (existing) return existing;
@@ -50,6 +59,6 @@ export async function issueService(form: ServiceForm, answers: FormAnswers): Pro
     issuerId: ISSUER_ID,
     privateKeyHex,
     now: Math.floor(Date.now() / 1000),
-    credentialId: 'urn:uuid:' + bytesToHex(getRandomBytes(16)),
+    credentialId: 'urn:uuid:' + uuidV4(),
   });
 }

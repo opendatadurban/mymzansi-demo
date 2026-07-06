@@ -13,5 +13,4 @@ module.exports = {
   transform: { '^.+\\.[jt]sx?$': 'babel-jest' },
   transformIgnorePatterns: ['node_modules/(?!(@noble)/)'],
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/*.d.ts'],
-  passWithNoTests: true,
 };

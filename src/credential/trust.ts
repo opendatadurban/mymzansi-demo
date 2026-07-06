@@ -24,16 +24,14 @@ const committed = trust.issuers as Record<string, IssuerInfo>;
 const runtimeIssuers: Record<string, IssuerInfo> = {};
 
 export function registerRuntimeIssuer(id: string, publicKeyHex: string, name: string): void {
+  // A runtime issuer must never shadow a committed government anchor.
+  if (committed[id]) throw new Error(`Refusing to override committed trusted issuer "${id}"`);
   runtimeIssuers[id] = { publicKeyHex, name };
 }
 
 function allIssuers(): Record<string, IssuerInfo> {
   return { ...committed, ...runtimeIssuers };
 }
-
-export const TRUSTED_ISSUERS: Record<string, string> = Object.fromEntries(
-  Object.entries(committed).map(([id, info]) => [id, info.publicKeyHex])
-);
 
 export function issuerName(id: string | undefined): string | undefined {
   return id ? allIssuers()[id]?.name : undefined;

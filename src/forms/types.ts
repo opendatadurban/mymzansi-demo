@@ -37,6 +37,14 @@ export interface FormField {
   /** For 'note' (read-only literal content). */
   content?: string;
   /**
+   * For 'idNumber': only enforce the SA-ID Luhn format when another answer
+   * matches (e.g. asylum permit numbers are not SA IDs). The field itself
+   * stays required/optional as declared.
+   */
+  idCheckWhen?: { field: string; equals: string };
+  /** Required only when another answer is one of these values (besides `required`). */
+  requiredWhen?: { field: string; equalsAny: string[] };
+  /**
    * If set, this answer is written to the issued credential under this claim
    * name (mirrors the fixtures' MapToCredentialClaimField).
    */

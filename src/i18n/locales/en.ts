@@ -19,11 +19,13 @@ const en = {
   apply: {
     title: 'Apply for a service',
     subtitle: 'Apply for a government credential. Once issued, it lands in your wallet.',
-    fee: 'Fee',
   },
   form: {
     step: 'Step {{current}} of {{total}}',
     next: 'Next',
+    chooseFile: 'Choose file',
+    fileAttached: 'Photo attached',
+    datePlaceholder: 'YYYY-MM-DD',
     errors: {
       required: 'This field is required.',
       requiredCheck: 'Please tick this box to continue.',
@@ -39,6 +41,7 @@ const en = {
     demoNote: 'Demo: no real payment is taken. Paying issues the credential to your wallet.',
     pay: 'Pay {{fee}}',
     processing: 'Processing…',
+    failed: 'Something went wrong and the credential was not issued. No payment was taken — please try again.',
   },
   success: {
     title: 'Credential issued',
@@ -61,7 +64,7 @@ const en = {
   wallet: {
     title: 'My Wallet',
     empty: 'You have no credentials yet.',
-    emptyHint: 'Add your Proof of Address to get started.',
+    emptyHint: 'Add the demo credentials, or apply for one on the Apply tab.',
     addDemo: 'Add demo credentials',
     added: 'Credentials added to your wallet.',
     verifiedBadge: 'Verified',
@@ -79,6 +82,7 @@ const en = {
     sensitive: 'Sensitive',
     revoked: 'This credential has been revoked.',
     remove: 'Remove from wallet',
+    removeConfirm: 'This removes the credential from your wallet on this device.',
   },
   verify: {
     title: 'Verify a credential',
@@ -88,6 +92,7 @@ const en = {
     permissionTitle: 'Camera access needed',
     permissionBody: 'Allow camera access to scan credentials.',
     grant: 'Allow camera',
+    openSettings: 'Open settings',
     valid: 'Valid credential',
     invalid: 'Not valid',
     issuer: 'Issuer',

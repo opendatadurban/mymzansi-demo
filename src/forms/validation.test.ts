@@ -1,5 +1,7 @@
 import { isValidSaId, validateField, validateStep } from './validation';
 import { MATRIC } from './schemas/matric';
+import { SASSA } from './schemas/sassa';
+import { SMART_ID } from './schemas/smartId';
 import type { FormField } from './types';
 
 describe('isValidSaId', () => {
@@ -34,6 +36,28 @@ describe('validateField', () => {
     expect(validateField(f({ type: 'date' }), '2020-1-1')).toBe('date');
     expect(validateField(f({ type: 'date' }), '2020-01-01')).toBeNull();
     expect(validateField(f({ type: 'idNumber' }), '8001015009087')).toBeNull();
+  });
+});
+
+describe('conditional validation', () => {
+  const base = { given_name: 'A', family_name: 'B', birth_date: '1990-02-20' };
+
+  it('SASSA: Luhn-checks the SA-ID route', () => {
+    const errors = validateStep(SASSA.steps[0], { ...base, identity_type: 'sa_id', id_number: 'not-an-id' });
+    expect(errors.id_number).toBe('idNumber');
+  });
+  it('SASSA: accepts a permit number on the asylum route', () => {
+    const errors = validateStep(SASSA.steps[0], { ...base, identity_type: 'asylum', id_number: 'PTA-0012345/2019' });
+    expect(errors).toEqual({});
+  });
+  it('SASSA: the permit number is still required', () => {
+    const errors = validateStep(SASSA.steps[0], { ...base, identity_type: 'asylum' });
+    expect(errors.id_number).toBe('required');
+  });
+  it('Smart ID: the ID number is required for a re-issue but not a first issue', () => {
+    const idField = SMART_ID.steps[1].fields.find((f) => f.name === 'id_number')!;
+    expect(validateField(idField, '', { application_type: 'reissue' })).toBe('required');
+    expect(validateField(idField, '', { application_type: 'first' })).toBeNull();
   });
 });
 

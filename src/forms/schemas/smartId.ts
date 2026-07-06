@@ -40,7 +40,15 @@ export const SMART_ID: ServiceForm = {
         { name: 'maiden_name', type: 'text', label: 'Maiden name (if applicable)' },
         { name: 'birth_date', type: 'date', label: 'Date of birth', required: true, claim: 'birth_date' },
         { name: 'place_of_birth', type: 'text', label: 'Place of birth', required: true, claim: 'place_of_birth' },
-        { name: 'id_number', type: 'idNumber', label: 'South African ID number (if a re-issue)', claim: 'id_number', sensitive: true },
+        {
+          name: 'id_number',
+          type: 'idNumber',
+          label: 'South African ID number (if a re-issue)',
+          claim: 'id_number',
+          sensitive: true,
+          // A re-issue or replacement is of an existing ID, so the number is required.
+          requiredWhen: { field: 'application_type', equalsAny: ['reissue', 'replacement'] },
+        },
         {
           name: 'sex',
           type: 'radio',

@@ -4,7 +4,7 @@
  * signature over the whole set. A relying party scans it on the Verify tab.
  */
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, Text, View, Pressable, Switch } from 'react-native';
+import { Alert, StyleSheet, Text, View, Pressable, Switch } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,6 +16,7 @@ import { useWalletStore } from '../../src/store/walletStore';
 import { present } from '../../src/crypto/sdvc';
 import { PRESENTATION_QR_PREFIX } from '../../src/crypto/types';
 import { getClaim, statusOf, formatDate, claimLabel, defaultDisclosure, sensitiveClaimNames } from '../../src/credential/display';
+import { getSchema } from '../../src/credential/schema';
 
 export default function CredentialDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -38,7 +39,10 @@ export default function CredentialDetail() {
   }
 
   const status = statusOf(cred);
-  const title = cred.meta?.title ?? t('credential.poa.title');
+  // Known schemas have localised strings; form-issued credentials carry meta.
+  const schema = getSchema(cred.payload.schema);
+  const title = schema ? t(schema.titleKey) : (cred.meta?.title ?? t('credential.poa.title'));
+  const issuerDisplayName = schema ? t(schema.issuerNameKey) : (cred.meta?.issuerName ?? t('issuer.homeAffairs'));
 
   const toggle = (name: string) =>
     setSelected((prev) => {
@@ -69,7 +73,7 @@ export default function CredentialDetail() {
 
       <Card>
         <Text style={font.label}>{t('detail.issuedBy')}</Text>
-        <Text style={font.title}>{cred.meta?.issuerName ?? t('issuer.homeAffairs')}</Text>
+        <Text style={font.title}>{issuerDisplayName}</Text>
         <Divider />
         <Text style={font.small}>
           {t('detail.expires')}: {formatDate(cred.payload.exp, i18n.language)}
@@ -128,10 +132,20 @@ export default function CredentialDetail() {
       <Button
         title={t('detail.remove')}
         variant="danger"
-        onPress={async () => {
-          await remove(cid);
-          router.back();
-        }}
+        onPress={() =>
+          Alert.alert(t('detail.remove'), t('detail.removeConfirm'), [
+            { text: t('common.cancel'), style: 'cancel' },
+            {
+              text: t('detail.remove'),
+              style: 'destructive',
+              // Navigate first so the screen never renders without its credential.
+              onPress: () => {
+                router.back();
+                void remove(cid);
+              },
+            },
+          ])
+        }
       />
     </Screen>
   );

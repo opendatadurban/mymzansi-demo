@@ -9,6 +9,7 @@ import { Screen, Button, Pill } from '../../src/ui/components';
 import { colors, font, radius, spacing } from '../../src/ui/theme';
 import { useWalletStore } from '../../src/store/walletStore';
 import { holderName, statusOf, formatDate } from '../../src/credential/display';
+import { getSchema } from '../../src/credential/schema';
 import type { HeldCredential } from '../../src/crypto/types';
 
 export default function WalletScreen() {
@@ -70,7 +71,10 @@ function CredentialCard({ cred, locale, onPress }: { cred: HeldCredential; local
   const status = statusOf(cred);
   const accent = cred.meta?.accent ?? colors.primary;
   const holder = holderName(cred);
-  const title = cred.meta?.title ?? t('credential.poa.title');
+  // Known schemas have localised strings; form-issued credentials carry meta.
+  const schema = getSchema(cred.payload.schema);
+  const title = schema ? t(schema.titleKey) : (cred.meta?.title ?? t('credential.poa.title'));
+  const issuer = schema ? t(schema.issuerNameKey) : (cred.meta?.issuerName ?? t('issuer.homeAffairs'));
 
   return (
     <Pressable
@@ -80,7 +84,7 @@ function CredentialCard({ cred, locale, onPress }: { cred: HeldCredential; local
       style={({ pressed }) => [styles.card, { borderLeftColor: accent }, pressed && styles.cardPressed]}
     >
       <View style={styles.cardTop}>
-        <Text style={font.label}>{cred.meta?.issuerName ?? t('issuer.homeAffairs')}</Text>
+        <Text style={font.label}>{issuer}</Text>
         {status === 'valid' && <Pill text={t('wallet.verifiedBadge')} tone="success" />}
         {status === 'revoked' && <Pill text={t('verify.reasons.revoked')} tone="danger" />}
         {status === 'expired' && <Pill text={t('verify.reasons.expired')} tone="warning" />}

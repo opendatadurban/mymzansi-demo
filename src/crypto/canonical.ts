@@ -3,8 +3,9 @@
  * issuer (Node) and the wallet/verifier (React Native).
  *
  * We keep this runtime-agnostic on purpose: no Buffer, no atob/btoa, no
- * TextEncoder — only @noble utilities that are pure JS. The same bytes must
- * come out on the phone and on the issuing server, or signatures won't verify.
+ * TextDecoder (Hermes ships TextEncoder but not TextDecoder, hence bytesToUtf8
+ * below) — only @noble utilities. The same bytes must come out on the phone
+ * and on the issuing server, or signatures won't verify.
  */
 import { utf8ToBytes, bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { sha256 } from '@noble/hashes/sha256';

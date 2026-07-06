@@ -5,7 +5,7 @@
  * one device (or two) demonstrate the whole issue→verify loop.
  */
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,10 +25,13 @@ export default function VerifyScreen() {
   const [scanning, setScanning] = useState(false);
   const [parsed, setParsed] = useState<Parsed | null>(null);
 
-  // Stop the camera when leaving the tab.
+  // Stop the camera and drop any previous verdict when leaving the tab.
   useFocusEffect(
     React.useCallback(() => {
-      return () => setScanning(false);
+      return () => {
+        setScanning(false);
+        setParsed(null);
+      };
     }, [])
   );
 
@@ -75,7 +78,12 @@ export default function VerifyScreen() {
         <Card>
           <Text style={font.title}>{t('verify.permissionTitle')}</Text>
           <Text style={font.small}>{t('verify.permissionBody')}</Text>
-          <Button title={t('verify.grant')} onPress={requestPermission} />
+          {permission.canAskAgain ? (
+            <Button title={t('verify.grant')} onPress={requestPermission} />
+          ) : (
+            // Permanently denied — the only way back is the system settings.
+            <Button title={t('verify.openSettings')} onPress={() => Linking.openSettings()} />
+          )}
         </Card>
       ) : (
         <Button

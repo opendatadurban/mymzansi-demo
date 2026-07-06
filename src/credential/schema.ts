@@ -55,16 +55,3 @@ const REGISTRY: Record<string, CredentialSchema> = {
 export function getSchema(id: string): CredentialSchema | undefined {
   return REGISTRY[id];
 }
-
-/** Label key for a claim, falling back gracefully for unknown schemas/claims. */
-export function claimLabelKey(schemaId: string, claimName: string): string {
-  const schema = getSchema(schemaId);
-  const field = schema?.fields.find((f) => f.name === claimName);
-  return field?.labelKey ?? `claim.generic.${claimName}`;
-}
-
-export function defaultDisclosedClaims(schemaId: string): string[] {
-  const schema = getSchema(schemaId);
-  if (!schema) return [];
-  return schema.fields.filter((f) => f.defaultDisclose).map((f) => f.name);
-}
